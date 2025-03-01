@@ -16,14 +16,14 @@ class Character(BaseModel):
 def save_character(name, age, favorite_food):
     file_name = "characters.csv"
     df = pd.read_csv(file_name)
-    df.loc[len(df)] = [id, name, age, favorite_food]
+    df.loc[len(df)] = [name, age, favorite_food]
     df.to_csv(file_name, index=False)
 
 # Function to save the character's quote as a new row to CSV file
 def save_quote(name, quote):
     file_name = "quotes.csv"
     df = pd.read_csv(file_name)
-    df.loc[len(df)] = [id, name, quote]
+    df.loc[len(df)] = [name, quote]
     df.to_csv(file_name, index=False)
 
 # POST: Create a character route
@@ -47,6 +47,7 @@ async def create_character(data: Character):
 @app.get("/characters")
 def get_characters():
     df = pd.read_csv("characters.csv")
+    df = df.drop(columns=['quote'])
     json_df = df.to_json(orient="records")
     return json.loads(json_df)
 
@@ -55,6 +56,7 @@ def get_characters():
 async def get_character(name):
     df = pd.read_csv("characters.csv")
     df = df[df["name"].str.contains(name)]
+    df = df.drop(columns=['quote'])
     json_df = df.to_json(orient="records")
     return json.loads(json_df)
 
