@@ -47,7 +47,6 @@ async def create_character(data: Character):
 @app.get("/characters")
 def get_characters():
     df = pd.read_csv("characters.csv")
-    df = df.drop(columns=['quote'])
     json_df = df.to_json(orient="records")
     return json.loads(json_df)
 
@@ -56,7 +55,6 @@ def get_characters():
 async def get_character(name):
     df = pd.read_csv("characters.csv")
     df = df[df["name"].str.contains(name)]
-    df = df.drop(columns=['quote'])
     json_df = df.to_json(orient="records")
     return json.loads(json_df)
 
